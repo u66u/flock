@@ -207,37 +207,37 @@ impl Expr {
                 .unwrap_or_else(|| expr.clone()),
             Int(_) | Bool(_) | None(_) => expr.clone(),
             Times(e1, e2) => Self::Times(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             Divide(e1, e2) => Self::Divide(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             Mod(e1, e2) => Self::Mod(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             Plus(e1, e2) => Self::Plus(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             Minus(e1, e2) => Self::Minus(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             Equal(e1, e2) => Self::Equal(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             Less(e1, e2) => Self::Less(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             If(e1, e2, e3) => Self::If(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
-                Box::new(subst(substitutions, e3)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e3)),
             ),
             Func(var, ty, e) => {
                 let filtered_subs = substitutions
@@ -245,29 +245,37 @@ impl Expr {
                     .filter(|(var_name, _)| var_name != var)
                     .cloned()
                     .collect();
-                Self::Func(var.clone(), ty.clone(), Box::new(subst(&filtered_subs, e)))
+                Self::Func(
+                    var.clone(),
+                    ty.clone(),
+                    Box::new(Self::subst(&filtered_subs, e)),
+                )
             }
             Apply(e1, e2) => Self::Apply(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             Pair(e1, e2) => Self::Pair(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
-            First(e) => Self::First(Box::new(subst(substitutions, e))),
-            Second(e) => Self::Second(Box::new(subst(substitutions, e))),
+            First(e) => Self::First(Box::new(Self::subst(substitutions, e))),
+            Second(e) => Self::Second(Box::new(Self::subst(substitutions, e))),
             Recursion(var, ty, e) => {
                 let filtered_subs = substitutions
                     .iter()
                     .filter(|(var_name, _)| var_name != var)
                     .cloned()
                     .collect();
-                Self::Recursion(var.clone(), ty.clone(), Box::new(subst(&filtered_subs, e)))
+                Self::Recursion(
+                    var.clone(),
+                    ty.clone(),
+                    Box::new(Self::subst(&filtered_subs, e)),
+                )
             }
             Cons(e1, e2) => Self::Cons(
-                Box::new(subst(substitutions, e1)),
-                Box::new(subst(substitutions, e2)),
+                Box::new(Self::subst(substitutions, e1)),
+                Box::new(Self::subst(substitutions, e2)),
             ),
             Match(e1, ty, e2, x, y, e3) => {
                 let filtered_subs = substitutions
@@ -276,12 +284,12 @@ impl Expr {
                     .cloned()
                     .collect();
                 Self::Match(
-                    Box::new(subst(substitutions, e1)),
+                    Box::new(Self::subst(substitutions, e1)),
                     ty.clone(),
-                    Box::new(subst(substitutions, e2)),
+                    Box::new(Self::subst(substitutions, e2)),
                     x.clone(),
                     y.clone(),
-                    Box::new(subst(&filtered_subs, e3)),
+                    Box::new(Self::subst(&filtered_subs, e3)),
                 )
             }
         }
