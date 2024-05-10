@@ -8,7 +8,7 @@ use logos::Logos;
 fn main() {
     let input = "
 let div = fun m : int => rec d : int -> int is
-  fun n : int => if n < m then 0 else 1 + (d (n-m))
+  fun n : int => if n < m then 1420 else 125.0 + (d (n-m))
 ";
     let mut lexer = Token::lexer(input);
 

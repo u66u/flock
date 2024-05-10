@@ -4,7 +4,7 @@ use logos::Logos;
 #[derive(Logos, Debug, PartialEq)]
 pub enum Token {
     #[token("bool")]
-    TBool,
+    TypeBool,
 
     #[token("else")]
     Else,
@@ -22,7 +22,7 @@ pub enum Token {
     If,
 
     #[token("int")]
-    TInt,
+    TypeInt,
 
     #[token("is")]
     Is,
@@ -31,7 +31,7 @@ pub enum Token {
     Let,
 
     #[token("list")]
-    TList,
+    TypeList,
 
     #[token("match")]
     Match,
@@ -55,16 +55,16 @@ pub enum Token {
     With,
 
     #[token("->")]
-    TArrow,
+    DashArrow,
 
     #[token("=>")]
-    DArrow,
+    EqualsArrow,
 
     #[token("::")]
     Cons,
 
     #[token(";;")]
-    Semicolon2,
+    DoubleSemicolon,
 
     #[token("%")]
     Mod,
@@ -100,10 +100,10 @@ pub enum Token {
     Equal,
 
     #[token("[")]
-    LBrack,
+    LSquareBrack,
 
     #[token("]")]
-    RBrack,
+    RSquareBrack,
 
     #[token("|")]
     Alternative,
@@ -112,8 +112,14 @@ pub enum Token {
     #[regex(r"[ \t\n\r]+", logos::skip)] // Skip whitespace
     Comment,
 
-    #[regex(r"[0-9]+")]
-    Int,
+    #[regex(r"[+-]?([0-9]*)(\.([0-9]+))?([eE][+-]?[0-9]+)?", |lex| lex.slice().parse::<f64>().unwrap())]
+    Float(f64),
+
+    #[regex("[+-]?[0-9]+", |lex| lex.slice().parse::<i64>().unwrap())]
+    Integer(i64),
+
+    #[regex(r#""([^"\\]|\\["\\bnfrt]|u[a-fA-F0-9]{4})*""#, |lex| lex.slice().to_owned())]
+    Var(String),
 
     #[end]
     EOF,

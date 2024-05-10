@@ -197,7 +197,7 @@ impl Expr {
         self.to_string_with_precedence(-1)
     }
 
-    fn subst(substitutions: &Vec<(String, Expr)>, expr: &Expr) -> Expr {
+    pub fn subst(substitutions: &Vec<(String, Expr)>, expr: &Expr) -> Expr {
         use Expr::*;
         match expr {
             Var(x) => substitutions
