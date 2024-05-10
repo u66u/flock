@@ -4,7 +4,8 @@ mod parser;
 
 use crate::ast::*;
 use crate::lexer::Token;
-use crate::parser::*;
+use crate::parser::Parser;
+// use chumsky::Parser;
 use logos::Logos;
 
 fn main() {
@@ -12,8 +13,6 @@ fn main() {
 3 + 5 - 2
 ";
     let mut lexer = Token::lexer(input);
-    let mut res = parser::parse_binary_expr(&mut lexer).unwrap();
-    println!("{:?}", res);
     // while let Some(token) = lexer.next() {
     //     println!("{:?}: '{}'", token, lexer.slice());
     // }

@@ -1,7 +1,7 @@
 extern crate logos;
 use logos::Logos;
 
-#[derive(Logos, Debug, PartialEq)]
+#[derive(Logos, Debug, PartialEq, Clone)]
 pub enum Token {
     #[token("bool")]
     TypeBool,
@@ -76,7 +76,7 @@ pub enum Token {
     RParen,
 
     #[token("*")]
-    Times,
+    Mult,
 
     #[token("+")]
     Plus,

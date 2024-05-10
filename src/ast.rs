@@ -12,7 +12,7 @@ pub enum Expr {
     Var(String),
     Int(i64),
     Bool(bool),
-    Times(Box<Expr>, Box<Expr>),
+    Mult(Box<Expr>, Box<Expr>),
     Divide(Box<Expr>, Box<Expr>),
     Mod(Box<Expr>, Box<Expr>),
     Plus(Box<Expr>, Box<Expr>),
@@ -36,6 +36,20 @@ pub enum Commands {
     Fn(String, Expr),
     Exit,
 }
+impl PartialEq for Type {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Type::Int, Type::Int) => true,
+            (Type::Bool, Type::Bool) => true,
+            (Type::List(a), Type::List(b)) => a == b,
+            (Type::Mult(a1, b1), Type::Mult(a2, b2)) => a1 == a2 && b1 == b2,
+            (Type::Func(a1, b1), Type::Func(a2, b2)) => a1 == a2 && b1 == b2,
+            _ => false,
+        }
+    }
+}
+
+impl Eq for Type {}
 
 impl Type {
     fn to_string_with_precedence(&self, outer_precedence: i32) -> String {
@@ -76,7 +90,7 @@ impl PartialEq for Expr {
             (Expr::Int(a), Expr::Int(b)) => a == b,
             (Expr::Plus(a1, a2), Expr::Plus(b1, b2)) => a1 == b1 && a2 == b2,
             (Expr::Minus(a1, a2), Expr::Minus(b1, b2)) => a1 == b1 && a2 == b2,
-            (Expr::Times(a1, a2), Expr::Times(b1, b2)) => a1 == b1 && a2 == b2,
+            (Expr::Mult(a1, a2), Expr::Mult(b1, b2)) => a1 == b1 && a2 == b2,
             (Expr::Divide(a1, a2), Expr::Divide(b1, b2)) => a1 == b1 && a2 == b2,
             _ => false,
         }
@@ -109,9 +123,9 @@ impl Expr {
                     e2.to_string_with_precedence(9)
                 ),
             ),
-            Times(e1, e2) | Divide(e1, e2) | Mod(e1, e2) => {
+            Mult(e1, e2) | Divide(e1, e2) | Mod(e1, e2) => {
                 let symbol = match self {
-                    Times(_, _) => "*",
+                    Mult(_, _) => "*",
                     Divide(_, _) => "/",
                     Mod(_, _) => "%",
                     _ => unreachable!(),
@@ -219,7 +233,7 @@ impl Expr {
                 .map(|(_, expr)| expr.clone())
                 .unwrap_or_else(|| expr.clone()),
             Int(_) | Bool(_) | None(_) => expr.clone(),
-            Times(e1, e2) => Self::Times(
+            Mult(e1, e2) => Self::Mult(
                 Box::new(Self::subst(substitutions, e1)),
                 Box::new(Self::subst(substitutions, e2)),
             ),
