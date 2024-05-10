@@ -1,18 +1,20 @@
 mod ast;
 mod lexer;
+mod parser;
 
 use crate::ast::*;
 use crate::lexer::Token;
+use crate::parser::*;
 use logos::Logos;
 
 fn main() {
     let input = "
-let div = fun m : int => rec d : int -> int is
-  fun n : int => if n < m then 1420 else 125.0 + (d (n-m))
+3 + 5 - 2
 ";
     let mut lexer = Token::lexer(input);
-
-    while let Some(token) = lexer.next() {
-        println!("{:?}: '{}'", token, lexer.slice());
-    }
+    let mut res = parser::parse_binary_expr(&mut lexer).unwrap();
+    println!("{:?}", res);
+    // while let Some(token) = lexer.next() {
+    //     println!("{:?}: '{}'", token, lexer.slice());
+    // }
 }

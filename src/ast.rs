@@ -10,7 +10,7 @@ pub enum Type {
 #[derive(Debug, Clone)]
 pub enum Expr {
     Var(String),
-    Int(i32),
+    Int(i64),
     Bool(bool),
     Times(Box<Expr>, Box<Expr>),
     Divide(Box<Expr>, Box<Expr>),
@@ -67,6 +67,19 @@ impl Type {
 
     pub fn to_string(&self) -> String {
         self.to_string_with_precedence(-1)
+    }
+}
+
+impl PartialEq for Expr {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Expr::Int(a), Expr::Int(b)) => a == b,
+            (Expr::Plus(a1, a2), Expr::Plus(b1, b2)) => a1 == b1 && a2 == b2,
+            (Expr::Minus(a1, a2), Expr::Minus(b1, b2)) => a1 == b1 && a2 == b2,
+            (Expr::Times(a1, a2), Expr::Times(b1, b2)) => a1 == b1 && a2 == b2,
+            (Expr::Divide(a1, a2), Expr::Divide(b1, b2)) => a1 == b1 && a2 == b2,
+            _ => false,
+        }
     }
 }
 
