@@ -10,10 +10,17 @@ use logos::Logos;
 
 fn main() {
     let input = "
-3 + 5 - 2
+        [int -> bool]
 ";
     let mut lexer = Token::lexer(input);
-    // while let Some(token) = lexer.next() {
-    //     println!("{:?}: '{}'", token, lexer.slice());
-    // }
+    let mut tokens: Vec<Token> = Vec::new();
+    while let Some(token) = lexer.next() {
+        match token {
+            Ok(token) => tokens.push(token),
+            Err(err) => println!("{:?}", err),
+        }
+    }
+    println!("{:?}", &tokens);
+    let mut parser = Parser::new(tokens.into_iter());
+    println!("{:?}", &parser.parse_nil());
 }

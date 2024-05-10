@@ -92,10 +92,14 @@ impl PartialEq for Expr {
             (Expr::Minus(a1, a2), Expr::Minus(b1, b2)) => a1 == b1 && a2 == b2,
             (Expr::Mult(a1, a2), Expr::Mult(b1, b2)) => a1 == b1 && a2 == b2,
             (Expr::Divide(a1, a2), Expr::Divide(b1, b2)) => a1 == b1 && a2 == b2,
+            (Expr::Equal(a1, a2), Expr::Equal(b1, b2))
+            | (Expr::Less(a1, a2), Expr::Less(b1, b2)) => a1 == b1 && a2 == b2,
             _ => false,
         }
     }
 }
+
+impl Eq for Expr {}
 
 impl Expr {
     fn to_string_with_precedence(&self, outer_precedence: i32) -> String {
