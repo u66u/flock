@@ -118,7 +118,7 @@ pub enum Token {
     #[regex("[+-]?[0-9]+", |lex| lex.slice().parse::<i64>().unwrap())]
     Integer(i64),
 
-    #[regex(r#""([^"\\]|\\["\\bnfrt]|u[a-fA-F0-9]{4})*""#, |lex| lex.slice().to_owned())]
+    #[regex(r"[a-zA-Z]+", |lex| lex.slice().to_owned())]
     Var(String),
 
     #[end]
